@@ -1,4 +1,4 @@
-# js-atom
+# js-atom v2
 
 Clojure(Script) atoms in plain JavaScript.
 
