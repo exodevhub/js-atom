@@ -4,7 +4,7 @@ exports.createAtom = function createAtom(val, options) {
     var watchers = {};
     var validator = options && options.validator || function () { return true; };
 
-    function transition(next) {
+    function transition(next, action) {
         if (!validator(next)) {
             var err = new Error(next + " failed validation");
             err.name = "AssertionError";
@@ -15,7 +15,7 @@ exports.createAtom = function createAtom(val, options) {
         val = next;
 
         Object.keys(watchers).forEach(function (k) {
-            watchers[k](k, atom, prev, next);
+            watchers[k](k, atom, prev, next, action);
         });
     }
 
@@ -28,9 +28,9 @@ exports.createAtom = function createAtom(val, options) {
             delete watchers[key];
         },
 
-        swap: function (fn) {
+        swap: function (fn, action) {
             var args = [val].concat([].slice.call(arguments, 1));
-            transition(fn.apply(null, args));
+            transition(fn.apply(null, args), action);
         },
 
         reset: function (v) {
